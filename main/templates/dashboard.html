@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block script %}
+
+    $('#admin').DataTable();
+
+{% endblock %}
+
+{% block content %}
+<h5>Manage Users</h5>
+{% if request.session.admin %}
+<a href="users/new" class="btn btn-primary">Add a new user</a>
+{% endif %}
+<table id='admin'>
+    <thead>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Created_at</th>
+        <th>user_level</th>
+        <th>Actions</th>
+    </thead>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.first_names }} {{ user.last_names }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.created_at }}</td>
+        <td>{{ user.permission }}</td>
+        {% if request.session.admin %}
+        <td><a href="users/edit/{{ user.id}}" class="btn btn-primary">Edit</a><a href="#" class="btn btn-primary">Remove</a></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

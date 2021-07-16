@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-6">
+        <form action="/userdashboard/users/editinfo" method="post">{% csrf_token %}
+            <div class="mt-3 form-group">
+                <label for="first_names">Nombres</label>
+                <input type="text" class="form-control" id="first_names" value="{{ user.first_names }}" placeholder="Ingrese sus nombres"
+                    name="first_names">
+            </div>
+            <div class="form-group">
+                <label for="last_names">Apellidos</label>
+                <input type="text" class="form-control" id="last_names" value="{{ user.last_names }}" placeholder="Ingrese sus Apellidos"
+                    name="last_names">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" value="{{ user.email }}"placeholder="Ingrese sus Apellidos" name="email">
+            </div>
+            <div class="form-group">
+                <label for="dateborn">Fecha de nacimiento</label>
+                <input type="date" class="form-control" id="dateborn" value="{{ user.dateborn|date:'Y-m-d' }}" placeholder="Ingrese sus Apellidos"
+                    name="dateborn">
+            </div>
+            {% if request.session.admin == True %}
+            <input type="hidden" name="user" value={{user.id}}>
+            <select name="permission" id="permission" class="form-control">
+                {% for permission in permissions %}
+                <option value="{{permission}}" {% if permission == user.permission %}selected{% endif %}>{{permission}}</option>
+                {% endfor%}
+            </select>
+            {% endif %}
+            <div class="text-center form-group mt-5">
+                <button class="btn-secondary btn" type="submit">Submit</button>
+            </div>
+
+        </form>
+    </div>
+    <div class="col-6">
+        <form action="/userdashboard/users/editpass" method="post">{% csrf_token %}
+            <div class="mt-3 form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" class="form-control" id="password" placeholder="Ingrese su contraseña"
+                    name="password">
+            </div>
+            <div class="form-group">
+                <label for="cpassword">Confirme su contraseña</label>
+                <input type="password" class="form-control" id="cpassword" name="cpassword"
+                    placeholder="Confirme su contraseña">
+            </div>
+            {% if request.session.admin == True %}
+            <input type="hidden" name="user" value={{user.id}}>
+            {% endif %}
+            <div class="text-center form-group mt-5">
+                <button class="btn-secondary btn" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+

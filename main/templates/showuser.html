@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h5>{{ user.first_names }} {{user.last_names}}</h5>
+<p class="h6">Registered at:</p>{{ user.created_at }}
+<p class="h6">Email:</p>{{ user.email }}
+
+
+<form action="newmessage" method="post"> {% csrf_token %}
+    <div class="form-group">
+        <label for="message">Add a new message for {{ user.first_names }}:</label>
+        <textarea name="message" id="message" style="resize:none" rows="5" class="form-control"></textarea>
+    </div>
+    <input type="hidden" name="destiny" value="{{ user.id }}">
+    <button type="submit" class="btn btn-primary">Post</button>
+</form>
+
+
+
+<div>
+    {% for message in user.ownmessages.all reversed %}
+    <div class="h5">{{ message.user }} says:</div>
+    <li>{{ message.content }}</li>
+    {% for comment in message.comments.all %}
+    <ul>
+        <li>{{ comment.user }} at {{ comment.created_at }}</li>
+        <li>{{ comment.content }}</li>
+    </ul>
+    {% endfor %}
+    <form action="newcomment" method="post"> {% csrf_token %}
+        <div class="form-group">
+            <input type="hidden" name="destiny" value="{{ user.id }}">
+            <input type="hidden" name="message" value="{{ message.id }}">
+            <label for="comment{{ message.id }}">Comment</label>
+            <textarea name="comment" id="comment{{ message.id }}" style="resize:none" rows="5"
+                class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Post</button>
+    </form> 
+    {% endfor %}
+</div>
+{% endblock %}
